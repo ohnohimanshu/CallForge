@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+platform_data/uploads/
+platform_data/*.db
+platform_data/*.db-*
+web/node_modules/
+web/dist/
+.cache/
+*.log
+*.pid
+chroma_data/
+PROJECT_OVERVIEW_AND_PITCH.md
+callforge.db

@@ -1,0 +1,8 @@
+services:
+  asterisk-pbx:
+    image: andrius/asterisk:latest
+    container_name: asterisk-pbx
+    network_mode: "host"
+    restart: unless-stopped
+    volumes:
+      - ./:/etc/asterisk
