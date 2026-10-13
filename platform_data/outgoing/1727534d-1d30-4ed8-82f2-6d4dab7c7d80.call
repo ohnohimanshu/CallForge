@@ -1,0 +1,11 @@
+Channel: PJSIP/+15551234001@guest
+CallerID: "Athena" <+15550009999>
+MaxRetries: 1
+RetryTime: 60
+WaitTime: 30
+Context: internal
+Extension: 4000
+Priority: 1
+Set: CAMPAIGN_ID=08395195-9b0f-4cf7-9060-0a1c727d8306
+Set: CONTACT_ID=1727534d-1d30-4ed8-82f2-6d4dab7c7d80
+Set: CONTACT_NAME=Alice Johnson

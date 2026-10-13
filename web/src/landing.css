@@ -1,0 +1,2007 @@
+@import 'lenis/dist/lenis.css';
+
+/* ==========================================================================
+   SARVAM AI INSPIRED DESIGN SYSTEM — CALLFORGE VOICE AGENTS
+   Aesthetic: Clean Sovereign AI, Precision SaaS, High-Contrast Obsidian & Ivory
+   Typography: Inter / Inter Tight (Headings) + JetBrains Mono (Telemetry)
+   ========================================================================== */
+
+:root {
+  --sarvam-sf: #fafafa;
+  --sarvam-sf-white: #ffffff;
+  --sarvam-sf-subtle: #f4f5f7;
+  --sarvam-sf-elevated: #ffffff;
+  --sarvam-sf-dark: #121316;
+
+  /* Typography */
+  --sarvam-tx-main: #111827;
+  --sarvam-tx-secondary: #374151;
+  --sarvam-tx-tertiary: #64748b;
+  --sarvam-tx-muted: #94a3b8;
+
+  /* Borders & Hairlines */
+  --sarvam-br-subtle: #e5e7eb;
+  --sarvam-br-medium: #d1d5db;
+  --sarvam-br-focus: #2a2c33;
+
+  /* Primary Button Charcoal / Obsidian */
+  --sarvam-btn-bg: #2a2c33;
+  --sarvam-btn-hover: #1e2025;
+  --sarvam-btn-bevel: inset 0 1px 0 rgba(255, 255, 255, 0.4), inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+
+  /* Accents */
+  --sarvam-green: #10b981;
+  --sarvam-green-dark: #047857;
+  --sarvam-green-bg: #ecfdf5;
+  --sarvam-indigo: #6366f1;
+  --sarvam-indigo-dark: #4338ca;
+  --sarvam-indigo-bg: #eef2ff;
+  --sarvam-orange: #f97316;
+  --sarvam-orange-dark: #c2410c;
+  --sarvam-orange-bg: #fff7ed;
+  --sarvam-blue: #0284c7;
+  --sarvam-blue-bg: #f0f9ff;
+
+  --sarvam-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --sarvam-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --sarvam-shadow-lg: 0 12px 28px -6px rgba(0, 0, 0, 0.08), 0 4px 10px -2px rgba(0, 0, 0, 0.04);
+  --sarvam-shadow-xl: 0 20px 40px -8px rgba(0, 0, 0, 0.12), 0 8px 16px -4px rgba(0, 0, 0, 0.06);
+
+  --font-display: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* Reset within landing scope */
+.sarvam-landing-root {
+  background-color: var(--sarvam-sf);
+  color: var(--sarvam-tx-main);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.sarvam-landing-root * {
+  box-sizing: border-box;
+}
+
+/* Background Subtle Mesh Glow */
+.sarvam-ambient-mesh {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 800px;
+  background-image: 
+    radial-gradient(1100px 500px at 50% -100px, rgba(99, 102, 241, 0.08), transparent 60%),
+    radial-gradient(800px 400px at 85% 150px, rgba(16, 185, 129, 0.06), transparent 55%),
+    radial-gradient(700px 350px at 15% 250px, rgba(249, 115, 22, 0.05), transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Reading Scroll Progress Bar */
+.sarvam-scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #6366f1 0%, #10b981 50%, #38bdf8 100%);
+  z-index: 1001;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+  transition: width 0.08s linear;
+  pointer-events: none;
+}
+
+/* Floating Telemetry Badges beside Hero */
+.sarvam-floating-badge {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 1.15rem;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #1e293b;
+  box-shadow: 0 12px 30px -6px rgba(0, 0, 0, 0.09), 0 0 0 1px rgba(255, 255, 255, 0.8);
+  pointer-events: none;
+  z-index: 12;
+  animation: badgeFloat 6s ease-in-out infinite alternate;
+}
+
+.sarvam-floating-badge.badge-left {
+  top: 36%;
+  left: 2.5%;
+  animation-delay: 0s;
+}
+
+.sarvam-floating-badge.badge-right {
+  top: 48%;
+  right: 2.5%;
+  animation-delay: 1.8s;
+}
+
+@keyframes badgeFloat {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(-1deg); }
+  100% { transform: translateY(6px) rotate(1deg); }
+}
+
+@media (max-width: 1024px) {
+  .sarvam-floating-badge {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   1. FIXED MODERN GLASSMORPHIC NAVBAR
+   -------------------------------------------------------------------------- */
+.sarvam-nav-header {
+  position: fixed;
+  inset-x: 0;
+  top: 0;
+  height: 68px;
+  z-index: 1000;
+  background: rgba(250, 250, 250, 0.82);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(229, 231, 235, 0.7);
+  display: flex;
+  align-items: center;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sarvam-nav-header.scrolled {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom-color: rgba(203, 213, 225, 0.7);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+  height: 64px;
+}
+
+.sarvam-nav-container {
+  max-width: 1240px;
+  width: 92%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.sarvam-wordmark-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: var(--sarvam-tx-main);
+}
+
+.sarvam-logo-icon {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  color: #ffffff;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.88rem;
+  letter-spacing: -0.04em;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  position: relative;
+  transition: transform 0.25s ease;
+}
+
+.sarvam-wordmark-link:hover .sarvam-logo-icon {
+  transform: scale(1.05);
+}
+
+.sarvam-logo-text-group {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.sarvam-brand-name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.18rem;
+  letter-spacing: -0.03em;
+  color: #0f172a;
+}
+
+.sarvam-logo-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4f46e5;
+  border: 1px solid #e0e7ff;
+}
+
+.sarvam-logo-pill-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
+  animation: pulseDot 2s infinite;
+}
+
+.sarvam-nav-links {
+  display: flex;
+  align-items: center;
+  background: rgba(241, 245, 249, 0.75);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  padding: 0.28rem 0.4rem;
+  border-radius: 9999px;
+  gap: 0.2rem;
+  backdrop-filter: blur(8px);
+}
+
+.sarvam-nav-link {
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: #475569;
+  text-decoration: none;
+  padding: 0.4rem 0.95rem;
+  border-radius: 9999px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.sarvam-nav-link:hover {
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.sarvam-nav-link.active {
+  color: #0f172a;
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  font-weight: 600;
+}
+
+.sarvam-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sarvam-btn-signin {
+  background: transparent;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #475569;
+  padding: 0.45rem 0.85rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.sarvam-btn-signin:hover {
+  color: #0f172a;
+}
+
+.sarvam-btn-nav-cta {
+  font-size: 0.85rem;
+  padding: 0.48rem 1.15rem;
+}
+
+.sarvam-mobile-toggle {
+  display: none;
+  border: 1px solid var(--sarvam-br-subtle);
+  background: #ffffff;
+  border-radius: 9px;
+  padding: 0.45rem;
+  color: #1e293b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sarvam-mobile-toggle:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.sarvam-mobile-drawer {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--sarvam-br-subtle);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
+  padding: 1.25rem 1.5rem 1.75rem;
+  transform: translateY(-8px);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sarvam-mobile-drawer.open {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sarvam-mobile-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1.25rem;
+}
+
+.sarvam-mobile-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  color: #334155;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.sarvam-mobile-nav-item:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+@media (max-width: 900px) {
+  .sarvam-nav-links {
+    display: none;
+  }
+  .sarvam-btn-signin,
+  .sarvam-btn-nav-cta {
+    display: none;
+  }
+  .sarvam-mobile-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* Sarvam Signature Pill Button */
+.sarvam-btn-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--sarvam-btn-bg);
+  color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 9999px;
+  padding: 0.5rem 1.25rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: var(--sarvam-btn-bevel);
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+}
+
+.sarvam-btn-pill::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 35%;
+  height: 200%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+  transform: rotate(30deg);
+  pointer-events: none;
+  transition: none;
+}
+
+.sarvam-btn-pill:hover::after {
+  left: 130%;
+  transition: left 0.65s ease-in-out;
+}
+
+.sarvam-btn-pill:hover {
+  background-color: var(--sarvam-btn-hover);
+  transform: translateY(-1px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.sarvam-btn-pill:active {
+  transform: scale(0.98);
+}
+
+.sarvam-btn-pill-lg {
+  padding: 0.85rem 1.85rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.sarvam-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #ffffff;
+  color: var(--sarvam-tx-main);
+  border: 1px solid var(--sarvam-br-medium);
+  border-radius: 9999px;
+  padding: 0.5rem 1.25rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: var(--sarvam-shadow-sm);
+  transition: all 0.2s ease;
+}
+
+.sarvam-btn-secondary:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+  box-shadow: var(--sarvam-shadow-md);
+}
+
+/* --------------------------------------------------------------------------
+   2. HERO SECTION
+   -------------------------------------------------------------------------- */
+.sarvam-hero {
+  position: relative;
+  z-index: 10;
+  padding-top: 130px;
+  padding-bottom: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 960px;
+  margin: 0 auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.sarvam-hero-aura-glow {
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 750px;
+  height: 420px;
+  background: radial-gradient(ellipse at center, rgba(99, 102, 241, 0.14) 0%, rgba(16, 185, 129, 0.08) 40%, transparent 70%);
+  filter: blur(65px);
+  pointer-events: none;
+  z-index: -1;
+  animation: heroAuraFloat 10s ease-in-out infinite alternate;
+}
+
+@keyframes heroAuraFloat {
+  0% { transform: translateX(-50%) translateY(0) scale(1); }
+  50% { transform: translateX(-48%) translateY(-20px) scale(1.06); }
+  100% { transform: translateX(-52%) translateY(10px) scale(0.97); }
+}
+
+.sarvam-micro-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--sarvam-tx-tertiary);
+  margin-bottom: 1.25rem;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--sarvam-br-subtle);
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  backdrop-filter: blur(8px);
+}
+
+.sarvam-hero-pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: pulseDot 2s infinite;
+}
+
+.sarvam-hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5.2vw, 3.8rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -1.2px;
+  color: var(--sarvam-tx-main);
+  margin-bottom: 1.35rem;
+  text-wrap: balance;
+}
+
+.sarvam-hero-title span.highlight-text {
+  background: linear-gradient(135deg, #0f172a 20%, #4f46e5 70%, #059669 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.sarvam-hero-subtitle {
+  font-size: clamp(1.02rem, 1.8vw, 1.2rem);
+  color: var(--sarvam-tx-secondary);
+  line-height: 1.6;
+  max-width: 760px;
+  margin: 0 auto 2.25rem;
+  text-wrap: pretty;
+}
+
+.sarvam-hero-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.sarvam-hero-microcopy {
+  font-size: 0.82rem;
+  color: var(--sarvam-tx-tertiary);
+  margin-top: 0.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   3. LAUNCH STEPPER PILLS (Describe -> Test -> Get a number -> Go live)
+   -------------------------------------------------------------------------- */
+.sarvam-stepper-container {
+  max-width: 820px;
+  margin: 2.5rem auto 0;
+  width: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 10;
+}
+
+.sarvam-stepper-line {
+  position: absolute;
+  top: 50%;
+  left: 30px;
+  right: 30px;
+  height: 2px;
+  background: #e5e7eb;
+  z-index: 1;
+  transform: translateY(-50%);
+}
+
+.sarvam-stepper-pill {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.55rem 1.15rem 0.55rem 0.55rem;
+  background: #ffffff;
+  border: 1px solid var(--sarvam-br-subtle);
+  border-radius: 9999px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--sarvam-tx-tertiary);
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  user-select: none;
+}
+
+.sarvam-stepper-pill:hover {
+  color: var(--sarvam-tx-main);
+  border-color: #cbd5e1;
+  transform: translateY(-2px);
+}
+
+.sarvam-stepper-pill.active {
+  color: var(--sarvam-tx-main);
+  border-color: var(--sarvam-tx-main);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
+  transform: scale(1.05) translateY(-2px);
+}
+
+.sarvam-step-icon-wrap {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.sarvam-stepper-pill.active .sarvam-step-icon-wrap {
+  background: #111827;
+  color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   4. SHOWCASE FRAME CONTAINER
+   -------------------------------------------------------------------------- */
+.sarvam-showcase-wrapper {
+  max-width: 1100px;
+  width: 90%;
+  margin: 2rem auto 5rem;
+  position: relative;
+  z-index: 10;
+}
+
+.sarvam-showcase-card {
+  background: #ffffff;
+  border: 1px solid var(--sarvam-br-subtle);
+  border-radius: 24px;
+  box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.8);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* Showcase Header Bar */
+.sarvam-showcase-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--sarvam-br-subtle);
+  background: #fafafa;
+}
+
+.sarvam-traffic-dots {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.sarvam-traffic-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.sarvam-traffic-dot.red { background: #ff5f56; }
+.sarvam-traffic-dot.yellow { background: #ffbd2e; }
+.sarvam-traffic-dot.green { background: #27c93f; }
+
+/* --------------------------------------------------------------------------
+   5. INTERACTIVE 3-COLUMN STUDIO ("Experience a voice agent, live")
+   -------------------------------------------------------------------------- */
+.sarvam-live-section {
+  padding: 5rem 0;
+  background: #ffffff;
+  border-top: 1px solid var(--sarvam-br-subtle);
+  border-bottom: 1px solid var(--sarvam-br-subtle);
+}
+
+.sarvam-section-header {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 3.5rem;
+  padding: 0 1.5rem;
+}
+
+.sarvam-section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.8vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  color: var(--sarvam-tx-main);
+  margin-bottom: 1rem;
+}
+
+.sarvam-section-desc {
+  font-size: 1.05rem;
+  color: var(--sarvam-tx-tertiary);
+  line-height: 1.6;
+}
+
+.sarvam-studio-container {
+  max-width: 1200px;
+  width: 92%;
+  margin: 0 auto;
+  border: 1px solid var(--sarvam-br-subtle);
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: var(--sarvam-shadow-xl);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 0.72fr 1fr 1.18fr;
+  min-height: 640px;
+}
+
+@media (max-width: 1024px) {
+  .sarvam-studio-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Column 1: Choose an agent */
+.sarvam-col-agents {
+  border-right: 1px solid var(--sarvam-br-subtle);
+  padding: 1.75rem 1.5rem;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+}
+
+.sarvam-col-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--sarvam-tx-main);
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sarvam-agent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  flex: 1;
+}
+
+.sarvam-agent-item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid var(--sarvam-br-subtle);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  user-select: none;
+}
+
+.sarvam-agent-item:hover {
+  border-color: #cbd5e1;
+  background: #ffffff;
+  transform: translateX(2px);
+}
+
+.sarvam-agent-item.selected {
+  background: #ffffff;
+  border-color: var(--sarvam-tx-main);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.sarvam-agent-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sarvam-agent-icon.green { background: #ecfdf5; color: #059669; }
+.sarvam-agent-icon.indigo { background: #eef2ff; color: #4f46e5; }
+.sarvam-agent-icon.orange { background: #fff7ed; color: #ea580c; }
+.sarvam-agent-icon.blue { background: #f0f9ff; color: #0284c7; }
+.sarvam-agent-icon.rose { background: #fff1f2; color: #e11d48; }
+
+.sarvam-agent-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.sarvam-agent-name {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--sarvam-tx-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sarvam-agent-tag {
+  font-size: 0.72rem;
+  color: var(--sarvam-tx-tertiary);
+  margin-top: 0.15rem;
+}
+
+/* Column 2: Agent Configuration & Prompt */
+.sarvam-col-config {
+  border-right: 1px solid var(--sarvam-br-subtle);
+  padding: 1.75rem 1.5rem;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  overflow-y: auto;
+}
+
+.sarvam-config-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.sarvam-config-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--sarvam-tx-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sarvam-prompt-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1rem;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: #334155;
+  font-family: var(--font-body);
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+/* Language Switcher Pills */
+.sarvam-lang-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.sarvam-lang-pill {
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--sarvam-br-subtle);
+  background: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--sarvam-tx-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sarvam-lang-pill:hover {
+  border-color: #cbd5e1;
+}
+
+.sarvam-lang-pill.active {
+  background: #111827;
+  color: #ffffff;
+  border-color: #111827;
+}
+
+/* Voice Profile & Tool Badges */
+.sarvam-tool-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.sarvam-tool-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 8px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: #475569;
+}
+
+/* Column 3: Live Real-Time Simulator */
+.sarvam-col-simulator {
+  padding: 1.75rem 1.75rem;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sarvam-phone-card {
+  background: #ffffff;
+  border: 1px solid var(--sarvam-br-subtle);
+  border-radius: 16px;
+  padding: 1.25rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.sarvam-phone-card.active-call {
+  border-color: #10b981;
+  box-shadow: 0 12px 32px -4px rgba(16, 185, 129, 0.18), 0 0 0 1px #10b981;
+}
+
+.sarvam-phone-card.barged {
+  animation: bargeFlash 0.6s ease;
+}
+
+@keyframes bargeFlash {
+  0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.8); border-color: #f59e0b; }
+  50% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); border-color: #ef4444; }
+  100% { box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04); border-color: var(--sarvam-br-subtle); }
+}
+
+.sarvam-phone-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sarvam-call-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.sarvam-status-pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: sarvamPulse 1.8s infinite;
+}
+
+@keyframes sarvamPulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.35); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+/* Waveform Canvas Container */
+.sarvam-wave-container {
+  height: 80px;
+  background: #0b0f19;
+  border-radius: 12px;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.sarvam-wave-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Chat Transcript Bubble Stream */
+.sarvam-transcript-stream {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 210px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.sarvam-bubble {
+  padding: 0.65rem 0.95rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  position: relative;
+  max-width: 90%;
+}
+
+.sarvam-bubble.caller {
+  align-self: flex-start;
+  background: #f1f5f9;
+  color: #1e293b;
+  border-bottom-left-radius: 3px;
+}
+
+.sarvam-bubble.agent {
+  align-self: flex-end;
+  background: #111827;
+  color: #ffffff;
+  border-bottom-right-radius: 3px;
+}
+
+.sarvam-bubble-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.35rem;
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.sarvam-bubble.caller .sarvam-bubble-meta {
+  color: #64748b;
+}
+
+.sarvam-bubble.active-turn {
+  box-shadow: 0 0 0 2px #10b981, 0 4px 14px rgba(16, 185, 129, 0.25);
+  transform: scale(1.02);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sarvam-latency-tag {
+  font-family: var(--font-mono);
+  background: rgba(255, 255, 255, 0.15);
+  padding: 0.05rem 0.35rem;
+  border-radius: 4px;
+}
+
+/* Call Control Buttons */
+.sarvam-controls-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 0.5rem;
+}
+
+.sarvam-btn-call {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: #10b981;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+}
+
+.sarvam-btn-call:hover {
+  background: #059669;
+}
+
+.sarvam-btn-call.in-call {
+  background: #ef4444;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+}
+
+.sarvam-btn-call.in-call:hover {
+  background: #dc2626;
+}
+
+.sarvam-btn-barge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #ffffff;
+  border: 1px solid var(--sarvam-br-medium);
+  border-radius: 10px;
+  padding: 0.75rem 0.95rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sarvam-btn-barge:hover {
+  background: #f9fafb;
+  border-color: #111827;
+}
+
+/* Simulator Telemetry Bar */
+.sarvam-telemetry-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--sarvam-br-subtle);
+}
+
+.sarvam-telemetry-item {
+  text-align: center;
+  background: #ffffff;
+  padding: 0.45rem 0.25rem;
+  border-radius: 8px;
+  border: 1px solid var(--sarvam-br-subtle);
+}
+
+.sarvam-telemetry-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  color: var(--sarvam-tx-tertiary);
+  font-weight: 600;
+}
+
+.sarvam-telemetry-value {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--sarvam-tx-main);
+  margin-top: 0.15rem;
+}
+
+/* --------------------------------------------------------------------------
+   6. SERIOUS CALL VOLUMES / SOCIAL PROOF
+   -------------------------------------------------------------------------- */
+.sarvam-volume-section {
+  padding: 4.5rem 0;
+  background: #fafafa;
+  text-align: center;
+}
+
+.sarvam-metrics-grid {
+  max-width: 1100px;
+  width: 90%;
+  margin: 2.5rem auto 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .sarvam-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.sarvam-metric-card {
+  background: #ffffff;
+  border: 1px solid var(--sarvam-br-subtle);
+  border-radius: 16px;
+  padding: 1.75rem 1.25rem;
+  box-shadow: var(--sarvam-shadow-sm);
+  transition: transform 0.2s ease;
+}
+
+.sarvam-metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--sarvam-shadow-md);
+}
+
+.sarvam-metric-num {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--sarvam-tx-main);
+  letter-spacing: -0.03em;
+}
+
+.sarvam-metric-label {
+  font-size: 0.88rem;
+  color: var(--sarvam-tx-tertiary);
+  margin-top: 0.35rem;
+}
+
+/* --------------------------------------------------------------------------
+   7. FEATURES: BUILD. TEST. GO LIVE.
+   -------------------------------------------------------------------------- */
+.sarvam-features-section {
+  padding: 6rem 0;
+  background: #ffffff;
+}
+
+.sarvam-features-grid {
+  max-width: 1200px;
+  width: 90%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .sarvam-features-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sarvam-feature-card {
+  position: relative;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid var(--sarvam-br-subtle);
+  border-radius: 20px;
+  padding: 2.25rem 2rem;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.sarvam-feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(350px circle at var(--mouse-x, -500px) var(--mouse-y, -500px), rgba(99, 102, 241, 0.12), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.sarvam-feature-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 20px 42px rgba(15, 23, 42, 0.09);
+}
+
+.sarvam-feature-card:hover::before {
+  opacity: 1;
+}
+
+.sarvam-feature-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #f1f5f9;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.sarvam-feature-card:hover .sarvam-feature-icon {
+  background: #111827;
+  color: #ffffff;
+}
+
+.sarvam-feature-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--sarvam-tx-main);
+  margin-bottom: 0.65rem;
+}
+
+.sarvam-feature-desc {
+  font-size: 0.92rem;
+  color: var(--sarvam-tx-secondary);
+  line-height: 1.6;
+}
+
+/* --------------------------------------------------------------------------
+   8. PROCESS: LIVE IN DAYS, NOT MONTHS
+   -------------------------------------------------------------------------- */
+.sarvam-process-section {
+  padding: 6rem 0;
+  background: #fafafa;
+  border-top: 1px solid var(--sarvam-br-subtle);
+}
+
+.sarvam-process-steps {
+  max-width: 1100px;
+  width: 90%;
+  margin: 3.5rem auto 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .sarvam-process-steps {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sarvam-process-step {
+  background: #ffffff;
+  border: 1px solid var(--sarvam-br-subtle);
+  border-radius: 20px;
+  padding: 2.25rem 1.75rem;
+  box-shadow: var(--sarvam-shadow-sm);
+  position: relative;
+}
+
+.sarvam-step-number {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #6366f1;
+  background: #eef2ff;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.sarvam-step-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--sarvam-tx-main);
+  margin-bottom: 0.65rem;
+}
+
+.sarvam-step-body {
+  font-size: 0.9rem;
+  color: var(--sarvam-tx-tertiary);
+  line-height: 1.6;
+}
+
+/* Guaranteed visibility baseline for sections and cards to prevent any GSAP/ScrollTrigger lag */
+.sarvam-audio-card,
+.sarvam-faq-item,
+.sarvam-feature-card,
+.sarvam-sec-card,
+.sarvam-process-step,
+.sarvam-section-header,
+.sarvam-metric-card,
+.sarvam-cta-card {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* --------------------------------------------------------------------------
+   9. AUDIO SAMPLES: HEAR OUR VOICE AGENTS AT WORK
+   -------------------------------------------------------------------------- */
+.sarvam-audio-section {
+  padding: 6.5rem 0;
+  background: #ffffff;
+  position: relative;
+}
+
+.sarvam-audio-grid {
+  max-width: 1100px;
+  width: 90%;
+  margin: 3.5rem auto 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.75rem;
+}
+
+@media (max-width: 768px) {
+  .sarvam-audio-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sarvam-audio-card {
+  background: #fafafa;
+  border: 1px solid var(--sarvam-br-subtle);
+  border-radius: 20px;
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.sarvam-audio-card:hover {
+  background: #ffffff;
+  box-shadow: 0 16px 36px -6px rgba(15, 23, 42, 0.08), 0 4px 12px rgba(15, 23, 42, 0.04);
+  border-color: #cbd5e1;
+  transform: translateY(-2px);
+}
+
+.sarvam-audio-card.playing {
+  background: #ffffff;
+  border-color: #10b981;
+  box-shadow: 0 14px 38px -6px rgba(16, 185, 129, 0.18), 0 0 0 1px #10b981;
+}
+
+.sarvam-audio-card.playing::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #10b981, #6366f1);
+}
+
+.sarvam-audio-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.sarvam-audio-agent-info {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.sarvam-audio-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1e293b;
+  flex-shrink: 0;
+  transition: all 0.25s ease;
+}
+
+.sarvam-audio-card.playing .sarvam-audio-avatar {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #059669;
+}
+
+.sarvam-audio-agent-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sarvam-audio-role {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin-top: 0.15rem;
+}
+
+.sarvam-lang-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.sarvam-audio-player-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: #ffffff;
+  border: 1px solid var(--sarvam-br-subtle);
+  padding: 0.9rem 1.15rem;
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.sarvam-audio-card.playing .sarvam-audio-player-bar {
+  border-color: #d1fae5;
+  background: #f0fdf4;
+}
+
+.sarvam-player-controls-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sarvam-play-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #111827;
+  color: #ffffff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.sarvam-play-btn:hover {
+  transform: scale(1.08);
+  background: #1f2937;
+}
+
+.sarvam-play-btn:active {
+  transform: scale(0.96);
+}
+
+.sarvam-audio-card.playing .sarvam-play-btn {
+  background: #10b981;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.25), 0 4px 12px rgba(16, 185, 129, 0.3);
+  animation: pulsePlayBtn 2.2s infinite;
+}
+
+@keyframes pulsePlayBtn {
+  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5), 0 4px 12px rgba(16, 185, 129, 0.3); }
+  70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0), 0 4px 12px rgba(16, 185, 129, 0.3); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0), 0 4px 12px rgba(16, 185, 129, 0.3); }
+}
+
+.sarvam-wave-bars {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 32px;
+  overflow: hidden;
+}
+
+.sarvam-wave-bar {
+  flex: 1;
+  background: #cbd5e1;
+  border-radius: 999px;
+  min-height: 4px;
+  transition: height 0.15s ease, background-color 0.2s ease;
+}
+
+.sarvam-wave-bar.active {
+  background: linear-gradient(180deg, #34d399 0%, #059669 100%);
+  animation: waveDance 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes waveDance {
+  0% { transform: scaleY(0.7); }
+  50% { transform: scaleY(1.3); }
+  100% { transform: scaleY(0.85); }
+}
+
+.sarvam-audio-time-meta {
+  font-size: 0.78rem;
+  color: #64748b;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+/* Audio Progress Track */
+.sarvam-audio-progress-track {
+  width: 100%;
+  height: 4px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.sarvam-audio-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+  border-radius: 999px;
+  transition: width 0.1s linear;
+}
+
+.sarvam-audio-transcript-box {
+  background: #f8fafc;
+  border: 1px solid #edf2f7;
+  border-radius: 12px;
+  padding: 1rem 1.15rem;
+  font-size: 0.88rem;
+  color: #334155;
+  line-height: 1.6;
+  position: relative;
+}
+
+.sarvam-audio-card.playing .sarvam-audio-transcript-box {
+  background: #ffffff;
+  border-color: #cbd5e1;
+}
+
+.sarvam-audio-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.74rem;
+  color: #94a3b8;
+  padding-top: 0.25rem;
+}
+
+.sarvam-audio-live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  color: #059669;
+}
+
+.sarvam-audio-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
+  animation: pulseLiveDot 1.5s infinite;
+}
+
+@keyframes pulseLiveDot {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.6; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* --------------------------------------------------------------------------
+   10. ENTERPRISE PRIVACY & SECURITY
+   -------------------------------------------------------------------------- */
+.sarvam-security-section {
+  padding: 6.5rem 0;
+  background: #0f172a;
+  color: #ffffff;
+  position: relative;
+}
+
+.sarvam-sec-grid {
+  max-width: 1100px;
+  width: 90%;
+  margin: 3.5rem auto 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.75rem;
+}
+
+@media (max-width: 768px) {
+  .sarvam-sec-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sarvam-sec-card {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 2.25rem 2rem;
+  backdrop-filter: blur(12px);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sarvam-sec-card:hover {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: rgba(255, 255, 255, 0.22);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.3);
+}
+
+.sarvam-sec-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.65rem;
+}
+
+.sarvam-sec-desc {
+  font-size: 0.92rem;
+  color: #94a3b8;
+  line-height: 1.6;
+}
+
+/* --------------------------------------------------------------------------
+   11. FAQ ACCORDION
+   -------------------------------------------------------------------------- */
+.sarvam-faq-section {
+  padding: 6.5rem 0;
+  background: #ffffff;
+  position: relative;
+}
+
+.sarvam-faq-container {
+  max-width: 860px;
+  width: 90%;
+  margin: 3.5rem auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sarvam-faq-item {
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  background: #fafafa;
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.sarvam-faq-item:hover {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 14px -2px rgba(15, 23, 42, 0.05);
+}
+
+.sarvam-faq-item.open {
+  background: #ffffff;
+  border-color: #6366f1;
+  box-shadow: 0 8px 24px -4px rgba(99, 102, 241, 0.12), 0 0 0 1px rgba(99, 102, 241, 0.25);
+}
+
+.sarvam-faq-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.35rem 1.75rem;
+  background: transparent;
+  border: none;
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: var(--sarvam-tx-main);
+  text-align: left;
+  cursor: pointer;
+  gap: 1rem;
+  transition: color 0.15s ease;
+}
+
+.sarvam-faq-trigger:hover {
+  color: #4338ca;
+}
+
+.sarvam-faq-item.open .sarvam-faq-trigger {
+  color: #1e1b4b;
+}
+
+.sarvam-faq-content {
+  padding: 0 1.75rem 1.5rem;
+  font-size: 0.95rem;
+  color: var(--sarvam-tx-secondary);
+  line-height: 1.7;
+  border-top: 1px solid rgba(241, 245, 249, 0.8);
+  margin-top: 0.25rem;
+  padding-top: 1rem;
+  animation: faqExpand 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes faqExpand {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --------------------------------------------------------------------------
+   12. CREATIVE AESTHETIC LAUNCH CTA (Replaces Enterprise Deployment Form)
+   -------------------------------------------------------------------------- */
+.sarvam-cta-section {
+  padding: 6.5rem 0 7.5rem;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid var(--sarvam-br-subtle);
+}
+
+.sarvam-cta-container {
+  max-width: 1080px;
+  width: 90%;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.sarvam-cta-card {
+  position: relative;
+  background: radial-gradient(120% 120% at 50% 10%, #1e293b 0%, #0f172a 50%, #020617 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 28px;
+  padding: 4.5rem 2.5rem;
+  text-align: center;
+  overflow: hidden;
+  box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.sarvam-cta-ambient {
+  position: absolute;
+  top: -40%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 650px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.28) 0%, rgba(16, 185, 129, 0.18) 45%, transparent 70%);
+  filter: blur(55px);
+  pointer-events: none;
+}
+
+.sarvam-cta-rings {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.sarvam-cta-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sarvam-cta-ring.ring-1 { width: 380px; height: 380px; animation: ctaPulse 8s ease-in-out infinite; }
+.sarvam-cta-ring.ring-2 { width: 620px; height: 620px; animation: ctaPulse 8s ease-in-out infinite 2s; }
+.sarvam-cta-ring.ring-3 { width: 860px; height: 860px; animation: ctaPulse 8s ease-in-out infinite 4s; }
+
+@keyframes ctaPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.35; }
+  50% { transform: translate(-50%, -50%) scale(1.04); opacity: 0.75; }
+}
+
+.sarvam-cta-content {
+  position: relative;
+  z-index: 3;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.sarvam-cta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.95rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 9999px;
+  color: #38bdf8;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(8px);
+}
+
+.sarvam-cta-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 10px #10b981;
+  animation: pulseDot 2s infinite;
+}
+
+.sarvam-cta-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 4.4vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.15;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+  margin: 0 0 1.25rem;
+  text-wrap: balance;
+}
+
+.sarvam-cta-desc {
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  color: #94a3b8;
+  line-height: 1.65;
+  margin: 0 auto 2.5rem;
+  max-width: 620px;
+}
+
+.sarvam-cta-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.sarvam-cta-primary-btn {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.25), 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  border: none !important;
+}
+
+.sarvam-cta-primary-btn:hover {
+  background: #f1f5f9 !important;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 0 40px rgba(255, 255, 255, 0.35), 0 8px 20px rgba(0, 0, 0, 0.2) !important;
+}
+
+.sarvam-cta-secondary-btn {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(8px);
+}
+
+.sarvam-cta-secondary-btn:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  color: #ffffff !important;
+}
+
+.sarvam-cta-telemetry {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.75rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sarvam-cta-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+/* --------------------------------------------------------------------------
+   13. FOOTER
+   -------------------------------------------------------------------------- */
+.sarvam-footer {
+  padding: 4rem 0 3rem;
+  background: #ffffff;
+  border-top: 1px solid var(--sarvam-br-subtle);
+}
+
+.sarvam-footer-inner {
+  max-width: 1200px;
+  width: 90%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.sarvam-footer-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: #059669;
+  font-weight: 500;
+}

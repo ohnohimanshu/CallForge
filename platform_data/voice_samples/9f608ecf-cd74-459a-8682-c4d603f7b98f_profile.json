@@ -1,0 +1,14 @@
+{
+  "agent_id": "9f608ecf-cd74-459a-8682-c4d603f7b98f",
+  "filename": "9786531WVcEQFBC1svfukU7Y5NZ1iWP5kqfC6tNTMyB-8QAZII.mp3",
+  "sample_path": "platform_data/voice_samples/9f608ecf-cd74-459a-8682-c4d603f7b98f_ref.wav",
+  "duration_s": 30.0,
+  "f0_hz": 250.0,
+  "spectral_centroid_hz": 1802.5,
+  "matched_base_voice": "en_US-amy-medium",
+  "pitch_shift_factor": 1.2,
+  "formant_factor": 1.001,
+  "cadence_scale": 0.94,
+  "rms_energy": 4481.7,
+  "updated_at": "1789980630.3864636"
+}

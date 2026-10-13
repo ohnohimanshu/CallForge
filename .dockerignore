@@ -1,0 +1,26 @@
+# Git
+.git
+.gitignore
+
+# Python artifacts
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+.pytest_cache/
+
+# Node artifacts
+web/node_modules/
+web/.vite/
+
+# Large model and database assets (mounted as volumes at runtime)
+models/
+chroma_data/
+whisper-cache/
+.cache/
+platform_data/*.db
+platform_data/uploads/
