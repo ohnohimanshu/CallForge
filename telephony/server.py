@@ -151,28 +151,41 @@ class AudioSocketServer:
             # than left at an unrelated hardcoded default, since a larger
             # cap here directly means more buffered audio that has to be
             # drained on barge-in before playback actually stops.
+            # Prefer FreePBX Method 1 HTTP registry (works across hosts),
+            # then fall back to legacy shared-filesystem callerid files.
             caller_id = "unknown"
-            caller_id_candidates = [
-                Path("asterisk-server/calls") / f"{call_id}.callerid",
-                Path("/app/asterisk-server/calls") / f"{call_id}.callerid",
-                Path("/etc/asterisk/calls") / f"{call_id}.callerid",
-                Path(f"/tmp/callforge_calls/{call_id}.callerid"),
-            ]
-            for candidate in caller_id_candidates:
-                if candidate.exists():
-                    try:
-                        cid = candidate.read_text(encoding="utf-8").strip()
-                        if cid:
-                            caller_id = cid
-                            logger.info("Call %s: identified caller_id=%r from %s", call_id, caller_id, candidate)
-                    except Exception as exc:
-                        logger.debug("Failed reading caller_id from %s: %s", candidate, exc)
-                    try:
-                        candidate.unlink(missing_ok=True)
-                    except Exception:
-                        pass
-                    if caller_id != "unknown":
-                        break
+            try:
+                from callforge.runtime.call_session_registry import SESSION_REGISTRY
+
+                registered = SESSION_REGISTRY.get_caller_id(str(call_id))
+                if registered and registered != "unknown":
+                    caller_id = registered
+                    logger.info("Call %s: identified caller_id=%r from session registry", call_id, caller_id)
+            except Exception as exc:
+                logger.debug("Session registry caller_id lookup failed: %s", exc)
+
+            if caller_id == "unknown":
+                caller_id_candidates = [
+                    Path("asterisk-server/calls") / f"{call_id}.callerid",
+                    Path("/app/asterisk-server/calls") / f"{call_id}.callerid",
+                    Path("/etc/asterisk/calls") / f"{call_id}.callerid",
+                    Path(f"/tmp/callforge_calls/{call_id}.callerid"),
+                ]
+                for candidate in caller_id_candidates:
+                    if candidate.exists():
+                        try:
+                            cid = candidate.read_text(encoding="utf-8").strip()
+                            if cid:
+                                caller_id = cid
+                                logger.info("Call %s: identified caller_id=%r from %s", call_id, caller_id, candidate)
+                        except Exception as exc:
+                            logger.debug("Failed reading caller_id from %s: %s", candidate, exc)
+                        try:
+                            candidate.unlink(missing_ok=True)
+                        except Exception:
+                            pass
+                        if caller_id != "unknown":
+                            break
 
             session = VoiceSession(
                 call_id=call_id,

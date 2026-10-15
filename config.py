@@ -356,7 +356,13 @@ class TtsSettings(BaseSettings):
     @field_validator("voice_model_path", "voice_model_path_hi", mode="before")
     @classmethod
     def _coerce_path(cls, v: str | Path) -> Path:
-        return Path(v)
+        p = Path(v)
+        if not p.exists():
+            for root in [Path("/models/piper"), Path("models/piper"), Path("/app/models/piper")]:
+                cand = root / p.name
+                if cand.exists():
+                    return cand
+        return p
 
 
 class Settings(BaseSettings):

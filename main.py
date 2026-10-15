@@ -67,20 +67,24 @@ class Application:
     async def start(self) -> None:
         await self.runtime.start()
 
-        # Seed and synchronize telephony server (IP phones & mobile extensions)
-        self.store.seed_default_phones()
+        # FreePBX Method 1 is primary — phones/trunks live in FreePBX.
+        # Legacy local phone sync is best-effort (optional legacy-asterisk profile).
         try:
+            self.store.seed_default_phones()
             from callforge.runtime.telephony_server import sync_telephony_server
             sync_res = await sync_telephony_server(self.store, PHONES_PJSIP_PATH, PHONES_DIALPLAN_PATH)
-            logger.info("Telephony Server active (%d phone extension(s) loaded)", sync_res.get("phones_count", 0))
+            logger.info(
+                "Legacy phone config written (%d extension(s)) — use FreePBX Method 1 for production",
+                sync_res.get("phones_count", 0),
+            )
         except Exception as e:
-            logger.warning("Telephony Server auto-sync warning: %s", e)
+            logger.debug("Legacy telephony sync skipped: %s", e)
 
-        # Seed a default agent on first run so dialing 2000 works out of the box
+        # Seed a default agent on first run so FreePBX can AudioSocket to :9092
         if not self.store.list_agents():
             agent = self.store.create_agent(
                 name="Default Agent",
-                description="Starter voice agent — edit or replace from the UI",
+                description="Starter voice agent — connect FreePBX via Direct AudioSocket (Method 1)",
                 extension="2000",
                 language="auto",
                 llm_model=self.settings.llm.model,
@@ -88,7 +92,9 @@ class Application:
                 greeting_text=self.settings.llm.greeting_text,
             )
             await self.runtime.deploy(agent.id)
-            logger.info("Seeded and deployed default agent on extension 2000")
+            logger.info(
+                "Seeded Default Agent on AudioSocket :9092 (FreePBX Custom Destination: callforge-agent-2000,s,1)"
+            )
 
         api_host = os.getenv("API_HOST", "0.0.0.0")
         api_port = int(os.getenv("API_PORT", "8080"))

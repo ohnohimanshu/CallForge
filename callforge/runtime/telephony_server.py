@@ -317,9 +317,12 @@ async def get_live_endpoints_state() -> dict[str, dict[str, Any]]:
     return endpoints_state
 
 
-async def get_phones_with_presence(store: PlatformStore) -> list[dict[str, Any]]:
-    """Return all phones in store merged with real-time registration presence."""
-    phones = store.list_phones()
+async def get_phones_with_presence(
+    store: PlatformStore,
+    owner_username: Optional[str] = None,
+) -> list[dict[str, Any]]:
+    """Return phones in store merged with real-time registration presence, scoped by user."""
+    phones = store.list_phones(owner_username=owner_username)
     live_states = await get_live_endpoints_state()
 
     results = []

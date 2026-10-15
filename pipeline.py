@@ -1539,8 +1539,15 @@ class CallPipeline:
         self._history.append(ConversationTurn(role="assistant", content=handoff_summary))
         self._log_turn("assistant", handoff_summary, reply_lang)
 
-        # Write handoff target file for Asterisk dialplan
+        # Publish handoff target for FreePBX Method 1 (HTTP) and legacy Asterisk files
         target_ext = self._persona.handoff_extension.strip()
+        try:
+            from callforge.runtime.call_session_registry import SESSION_REGISTRY
+
+            SESSION_REGISTRY.set_handoff(str(self._session.call_id), target_ext)
+        except Exception as exc:
+            logger.debug("Session registry handoff publish failed: %s", exc)
+
         base_dir = Path(__file__).resolve().parent
         handoff_paths = [
             Path("/etc/asterisk/handoff") / f"{self._session.call_id}.target",

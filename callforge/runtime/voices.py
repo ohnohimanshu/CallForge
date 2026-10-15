@@ -2,26 +2,60 @@
 
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 
 from config import TelephonySettings, TtsSettings
 from callforge.store.models import AgentRecord
 
-# Prefer local ./models/piper, fall back to /models/piper (Docker).
+logger = logging.getLogger(__name__)
+
+# Search paths for Piper ONNX voices (Docker /models/piper and local models/piper)
 _VOICE_ROOTS = [
-    Path("models/piper"),
     Path("/models/piper"),
+    Path("models/piper"),
+    Path("/app/models/piper"),
 ]
 
 
 def resolve_voice_path(voice_id: str) -> Path:
-    """Map a voice id like 'en_US-amy-medium' to an .onnx path."""
-    filename = f"{voice_id}.onnx"
+    """Map a voice id like 'en_US-amy-medium' to an .onnx path with safe fallback."""
+    clean_id = voice_id.replace(".onnx", "").strip()
+    filename = f"{clean_id}.onnx"
+
+    # 1. Exact match in any known voice root
     for root in _VOICE_ROOTS:
         candidate = root / filename
         if candidate.exists():
             return candidate
-    # Return the first conventional path even if missing — TtsService will error clearly.
+
+    # 2. Resilient fallback: locate any existing onnx voice model in roots
+    is_hindi = "hi" in clean_id.lower()
+    fallback_name = "hi_IN-priyamvada-medium.onnx" if is_hindi else "en_US-amy-medium.onnx"
+
+    for root in _VOICE_ROOTS:
+        if root.exists():
+            fb_candidate = root / fallback_name
+            if fb_candidate.exists():
+                logger.warning(
+                    "Voice model '%s' not found. Falling back to '%s' at %s",
+                    voice_id, fallback_name, fb_candidate
+                )
+                return fb_candidate
+
+            # Any available ONNX voice in root
+            available = list(root.glob("*.onnx"))
+            if available:
+                logger.warning(
+                    "Voice model '%s' not found. Falling back to '%s'",
+                    voice_id, available[0]
+                )
+                return available[0]
+
+    # Return standard path if roots are not yet mounted
+    for root in _VOICE_ROOTS:
+        if root.exists():
+            return root / filename
     return _VOICE_ROOTS[0] / filename
 
 
@@ -67,7 +101,6 @@ def tts_settings_for_agent_variant_b(agent: AgentRecord, base: TtsSettings) -> T
         noise_w_scale=base.noise_w_scale,
         volume=base.volume,
     )
-
 
 
 def telephony_settings_for_port(base: TelephonySettings, port: int) -> TelephonySettings:

@@ -371,7 +371,11 @@ export const api = {
       method: 'DELETE',
     }),
 
-  // Telephony PBX Server & IP Phone Extensions
+  // FreePBX Method 1 (Direct AudioSocket) — primary telephony integration
+  getFreePbxStatus: () => request<FreePbxStatus>('/api/telephony/freepbx'),
+  getFreePbxGuiStatus: () => request<FreePbxGuiStatus>('/api/telephony/freepbx/gui-status'),
+  getFreePbxAgentGuide: (agentId: string) =>
+    request<FreePbxGuide>(`/api/telephony/freepbx/agents/${agentId}`),
   getTelephonyServer: () => request<TelephonyServerInfo>('/api/telephony/server'),
   listPhones: () => request<Phone[]>('/api/telephony/phones'),
   createPhone: (body: Partial<Phone>) =>
@@ -397,7 +401,7 @@ export const api = {
       body: JSON.stringify({ count, start_extension: startExtension, password_prefix: passwordPrefix, device_type: deviceType }),
     }),
   reloadTelephonyServer: () =>
-    request<{ ok: boolean; sync: unknown }>('/api/telephony/reload', { method: 'POST' }),
+    request<{ ok: boolean; sync: unknown; message?: string }>('/api/telephony/reload', { method: 'POST' }),
   getPhoneConfig: (id: string) => request<PhoneConfigGuide>(`/api/telephony/phones/${id}/config`),
   originateTelephonyCall: (fromExtension: string, toExtension: string) =>
     request<{ ok: boolean; message: string; error?: string }>('/api/telephony/call', {
@@ -430,8 +434,59 @@ export type PhonePricing = {
   }
 }
 
+export type FreePbxGuide = {
+  method: string
+  recommended: boolean
+  agent_id: string
+  agent_name: string
+  extension: string
+  audiosocket_host: string
+  audiosocket_port: number
+  audiosocket_endpoint: string
+  api_base: string
+  custom_destination: string
+  dialplan_snippet: string
+  steps: string[]
+  firewall: { audiosocket_tcp: string; api_tcp: string; note: string }
+  why_not_sip_trunk: string[]
+}
+
+export type FreePbxStatus = {
+  method: string
+  recommended: boolean
+  status: string
+  message: string
+  audiosocket_host: string
+  api_base: string
+  ports: { api: number; audiosocket_range: string; sip_not_required: boolean }
+  firewall: string[]
+  live_lines: { agent_id: string; port: number; listening: boolean }[]
+  agents: FreePbxGuide[]
+  dialplan_file: string
+  dialplan: string
+  steps: string[]
+  comparison?: Record<string, Record<string, string>>
+}
+
+export type FreePbxGuiStatus = {
+  ok: boolean
+  online: boolean
+  status_detail: string
+  gui_url: string
+  access_mode: string
+  user_authenticated: boolean
+  username: string
+  message: string
+}
+
 export type TelephonyServerInfo = {
   status: string
+  integration?: string
+  method?: string
+  audiosocket_host?: string
+  api_base?: string
+  audiosocket_ports?: number[]
+  live_lines?: { agent_id: string; port: number; listening: boolean }[]
   sip_listening: boolean
   sip_port: number
   sip_protocol: string
@@ -447,6 +502,7 @@ export type TelephonyServerInfo = {
     intercom_broadcast: string
     audio_echo_test: string
     ai_agent: string
+    custom_destination?: string
   }
   supported_codecs: string[]
   compatible_clients: {

@@ -1,8 +1,10 @@
 # CallForge — Real-Time AI Calling Agents & Telephony Platform
 
-**CallForge** is a production-grade, local, full-duplex real-time AI voice calling platform and multi-agent telephony runtime. Powered by Asterisk PBX for carrier-grade SIP/PJSIP trunking, CallForge delivers an ultra-low-latency conversational audio pipeline (**Silero VAD → faster-whisper STT → Speculative RAG & Dynamic Tools → Local Ollama LLM → Streaming Piper TTS**) coupled with a modern React web control plane.
+**CallForge** is a production-grade, local, full-duplex AI voice engine for **FreePBX / Asterisk**. It connects with **Method 1: Direct AudioSocket** (raw 8kHz PCM over TCP) — not a SIP trunk — for ultra-low latency and instant barge-in. The conversational pipeline is **Silero VAD → faster-whisper STT → Speculative RAG & Tools → Local Ollama LLM → Streaming Piper TTS**, with a React control plane.
 
-> 📢 **Pitching or Evaluating CallForge?** See [PROJECT_OVERVIEW_AND_PITCH.md](file:///home/himanshu/Downloads/calling_agent/PROJECT_OVERVIEW_AND_PITCH.md) for the complete pitch deck, unit economics ($4.99/mo DID margin), investor presentation scripts, and technical deep dive!
+> **Primary integration:** [docs/FREEPBX_AUDIOSOCKET.md](docs/FREEPBX_AUDIOSOCKET.md) — FreePBX owns phones/trunks; CallForge is the AI AudioSocket endpoint.
+>
+> Pitch deck: [PROJECT_OVERVIEW_AND_PITCH.md](PROJECT_OVERVIEW_AND_PITCH.md)
 
 ---
 
@@ -33,7 +35,7 @@
   - [3. Ollama Setup (Multi-Caller Concurrency)](#3-ollama-setup-multi-caller-concurrency)
   - [4. Running CallForge](#4-running-callforge)
   - [5. Testing the Agent](#5-testing-the-agent)
-  - [6. Asterisk Telephony Setup](#6-asterisk-telephony-setup)
+  - [6. FreePBX Method 1 (Direct AudioSocket)](#6-freepbx-method-1-direct-audiosocket)
 - [Project Structure](#project-structure)
 - [API Reference](#api-reference)
 - [Configuration Reference](#configuration-reference)
@@ -44,9 +46,9 @@
 ## Key Capabilities & Features
 
 ### 1. Real-Time Conversational Voice Pipeline
-- **Full-Duplex Telephony**: Communicates with Asterisk over TCP using the AudioSocket protocol (8kHz 16-bit mono linear PCM frames at 20ms intervals).
-- **Sub-Second Latency**: Optimized pipeline yields sub-second conversational turn-around times on standard CPU/GPU consumer hardware without cloud API dependencies.
-- **Robust Barge-In & Interruption Handling**: Instantly stops agent speech and clears outbound audio buffers the moment caller speech is detected above configurable VAD probability (`VAD_BARGE_IN_SPEECH_THRESHOLD`) and RMS amplitude (`VAD_BARGE_IN_MIN_RMS`) thresholds.
+- **FreePBX Direct AudioSocket (Method 1)**: FreePBX streams raw 8kHz 16-bit mono PCM over one TCP port per agent (`9092+`). No SIP trunk between FreePBX and CallForge.
+- **Sub-Second Latency**: Optimized pipeline yields sub-second conversational turn-around times on standard CPU hardware without cloud API dependencies.
+- **Robust Barge-In**: Instantly stops agent speech and clears the ~20ms outbound buffer when caller speech is detected (VAD thresholds).
 
 ### 2. Cross-Call Memory & Caller Recognition
 - **Stateful Caller Profiles**: Automatically identifies callers via `${CALLERID(num)}` (or simulator ID), indexing names, lifetime call count, timestamps, sentiment trajectory, and structured outcome dispositions.
@@ -130,39 +132,34 @@
 
 ## Architecture
 
-### Audio & Telephony Pipeline
+### Audio & Telephony Pipeline (FreePBX Method 1)
 
 ```
-SIP Caller (Softphone / Trunk / Mobile)
+Caller (PSTN / Softphone / Trunk)
                  │
                  ▼
-        Asterisk PBX (PJSIP)
-                 │ (AudioSocket TCP: 8kHz 16-bit PCM frames @ 20ms)
+     FreePBX (phones, trunks, IVR, queues)
+                 │
+                 │  TCP AudioSocket — raw 8kHz PCM @ 20ms
+                 │  (+ HTTP session/handoff on :8080)
                  ▼
         CallForge Runtime Line (Port 9092+)
 ┌────────────────────────────────────────────────────────────────────────┐
 │                              CallPipeline                              │
-│                                                                        │
-│   Silero VAD (Pooled) ────► faster-whisper (Warm STT)                  │
-│                                      │                                 │
-│                                      ▼                                 │
-│   ┌────────────────────────────────────────────────────────────────┐   │
-│   │                 Speculative RAG & Tool Engine                  │   │
-│   │  • ChromaDB Document RAG   • Google Sheets Appointment Booking │   │
-│   │  • Cross-Call Memory       • Prosody & Emotion Tracking        │   │
-│   │  • Slot Filling Tracker    • Acoustic Backchanneling           │   │
-│   └──────────────────────────────────┬─────────────────────────────┘   │
-│                                      │                                 │
-│                                      ▼                                 │
-│                         Local Ollama LLM (Streaming)                   │
-│                                      │                                 │
-│                                      ▼                                 │
-│                     Piper TTS (Chunked Streaming Audio)                │
+│   Silero VAD → faster-whisper → Speculative RAG/Tools → Ollama → Piper │
 └──────────────────────────────────────┬─────────────────────────────────┘
-                                       │ (Outbound 20ms audio frames)
+                                       │
                                        ▼
-                              Asterisk Channel ──► Caller
+                         FreePBX channel ──► Caller
+                         (or Goto human ext on handoff)
 ```
+
+| | Method 1 AudioSocket | Method 2 SIP trunk |
+|--|----------------------|--------------------|
+| Latency | &lt;5ms PCM/TCP | +50–120ms |
+| Barge-in | Instant | 0.5–1.5s buffered |
+| Hops | FreePBX → AI | FreePBX → SIP → Asterisk → AI |
+| Firewall | 1 TCP port/agent | 5060 + RTP range |
 
 ### Cross-Call Memory Flow
 
@@ -204,13 +201,10 @@ Set default greeting                             Load Profile from SQLite
 ### 1. Prerequisites
 
 - **Operating System**: Linux (x86_64, Ubuntu 20.04+ recommended)
-- **Python**: Python 3.10 or higher
-- **Node.js**: Node.js 18+ and npm
-- **Asterisk PBX**: Local installation or Docker container (`asterisk-server/docker-compose.yml`)
-- **Ollama**: Local Ollama instance running:
-  - LLM model: `llama3.2:3b-instruct-q4_K_M` (or `qwen2.5:3b-instruct-q4_0`)
-  - Embeddings model: `nomic-embed-text`
-- **Piper Voice Models**: Stored in `models/piper/` (e.g. `en_US-lessac-medium.onnx`, `hi_IN-priyamvada-medium.onnx`)
+- **FreePBX 16/17** (Asterisk 18+) with `res_audiosocket` — owns phones & trunks
+- **Docker** (recommended) or Python 3.10+ / Node.js 18+ for local dev
+- **Ollama**: `llama3.2:3b-instruct-q4_K_M` + `nomic-embed-text`
+- **Piper Voice Models**: under `models/piper/` (e.g. `en_US-amy-medium.onnx`, `hi_IN-priyamvada-medium.onnx`)
 
 ---
 
@@ -265,54 +259,55 @@ sudo systemctl restart ollama
 
 ### 4. Running CallForge
 
-Start the main application:
+**Docker (recommended production path with FreePBX):**
+```bash
+cp env.example .env
+# Set LAN IP FreePBX will dial into:
+# FREEPBX_AUDIOSOCKET_HOST=10.17.2.139
+# FREEPBX_API_BASE=http://10.17.2.139:8080
+
+docker compose up -d
+```
+
+**Local Python:**
 ```bash
 python3 main.py
 ```
 
-The system will initialize:
-- **Web UI & REST API**: `https://localhost:8080` (or `http://localhost:8080` depending on `SSL_KEYFILE` setting)
-- **Agent AudioSocket Lines**: Starting on port `9092` (one dedicated port per deployed agent)
+Services:
+- **Web UI & API**: `http://localhost:8080`
+- **AudioSocket lines**: TCP `9092+` (one port per deployed agent) — FreePBX connects here
 
-> 💡 **Accessing from another device on the same Wi-Fi?** Use your machine's current LAN IP (e.g. `https://10.132.27.21:8080`). If your Wi-Fi IP changes, update your browser address accordingly to prevent `net::ERR_ADDRESS_UNREACHABLE`.
+On first run, a **Default Agent** is deployed on AudioSocket **:9092** (FreePBX context `callforge-agent-2000`).
 
-On first run, CallForge automatically creates and deploys a **Default Agent** on extension **2000** (port `9092`).
+> Embedded Asterisk is **optional** and off by default. Only for lab use without FreePBX:  
+> `docker compose --profile legacy-asterisk up -d`
 
 ---
 
 ### 5. Testing the Agent
 
-#### Option A: In-Browser Simulator (No Telephony Required)
-1. Open `https://localhost:8080` in your web browser.
-2. Sign in or click **Launch Console**.
-3. Open the **Simulator** from the navigation bar.
-4. Select an agent, enter a caller ID, and click **Start Call** to speak directly via your microphone and speakers.
+#### Option A: In-Browser Simulator (no PBX)
+1. Open `http://localhost:8080` → **Simulator**.
+2. Select an agent, set a caller ID, **Start Call**.
 
-#### Option B: Softphone / Asterisk Calling
-Configure any SIP softphone (Zoiper, Linphone, MicroSIP):
-- **SIP Server**: `<your-server-ip>:5060` (UDP)
-- **Username**: `guest`
-- **Password**: `guestpass123`
-- **Dial**: `2000` (Default Agent), `2001` (Mika), or any configured extension.
+#### Option B: FreePBX Method 1 (production)
+See [§6](#6-freepbx-method-1-direct-audiosocket) and [docs/FREEPBX_AUDIOSOCKET.md](docs/FREEPBX_AUDIOSOCKET.md).
 
 ---
 
-### 6. Asterisk Telephony Setup
+### 6. FreePBX Method 1 (Direct AudioSocket)
 
-Pre-configured Asterisk configuration files are located in `asterisk-server/`.
+1. Deploy agents in the CallForge UI (**FreePBX / AudioSocket** page shows live ports).
+2. Copy dialplan from the UI (or `curl http://<callforge-ip>:8080/api/telephony/freepbx/dialplan`).
+3. Paste into FreePBX `/etc/asterisk/extensions_custom.conf` → **Apply Config**.
+4. Create **Custom Destination** → `callforge-agent-2000,s,1` (match agent extension).
+5. Point Inbound Route / IVR at that destination.
+6. Firewall: FreePBX → CallForge TCP `8080` + `9092–9101`.
 
-If running Asterisk directly on your host:
-```bash
-# Reload PJSIP configuration and dialplan
-asterisk -rx "module reload res_pjsip.so"
-asterisk -rx "dialplan reload"
-```
+Generated snippet path: `platform_data/freepbx/extensions_custom_callforge.conf`
 
-#### Dialplan Integration:
-CallForge dynamically generates and maintains agent dialplan entries in `asterisk-server/extensions_agents.conf`. Include it in `/etc/asterisk/extensions.conf`:
-```ini
-#include "/path/to/calling_agent/asterisk-server/extensions_agents.conf"
-```
+**Do not** SIP-trunk FreePBX into CallForge. That is Method 2 (higher latency, worse barge-in).
 
 ---
 
@@ -334,7 +329,9 @@ calling_agent/
 │   │   └── wallboard.py                # Live wallboard metrics & channel telemetry
 │   ├── schemas.py                      # Pydantic request & response schemas
 │   └── __init__.py                     # FastAPI app factory, middleware & SPA serving
-├── asterisk-server/                    # Asterisk configuration (pjsip.conf, extensions.conf)
+├── docs/
+│   └── FREEPBX_AUDIOSOCKET.md          # Method 1 FreePBX Direct AudioSocket guide
+├── asterisk-server/                    # Optional legacy Asterisk (compose profile legacy-asterisk)
 ├── callforge/
 │   ├── ingest/
 │   │   └── documents.py                # Document parsers (PDF, DOCX, XLSX, TXT)
@@ -343,7 +340,9 @@ calling_agent/
 │   │   ├── asterisk_manager.py         # Asterisk AMI/ARI channel control & human transfer
 │   │   ├── campaign_engine.py          # Outbound campaign dialer & retry manager
 │   │   ├── dialogue.py                 # Slot-filling state machine & prompt directives
-│   │   ├── dialplan.py                 # Dynamic Asterisk dialplan generator
+│   │   ├── dialplan.py                 # Legacy local Asterisk dialplan generator
+│   │   ├── freepbx_dialplan.py         # FreePBX Method 1 extensions_custom.conf generator
+│   │   ├── call_session_registry.py    # Cross-host caller-id + handoff (HTTP)
 │   │   ├── tools.py                    # Google Sheets tools & spoken entity parsers
 │   │   └── voices.py                   # Voice path resolver & catalog metadata
 │   └── store/

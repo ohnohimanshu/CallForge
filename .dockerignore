@@ -12,6 +12,7 @@ env/
 venv/
 .venv/
 .pytest_cache/
+*.whl
 
 # Node artifacts
 web/node_modules/
@@ -23,4 +24,19 @@ chroma_data/
 whisper-cache/
 .cache/
 platform_data/*.db
+platform_data/*.db-*
 platform_data/uploads/
+platform_data/recordings/
+platform_data/outgoing/*.call
+platform_data/outgoing_staging/*.call
+
+# Logs & temp test files
+*.log
+*.pid
+asterisk-server/*.log
+asterisk-server/calls/*.callerid
+reference.wav
+short_reference.wav
+output.txt
+transcript.txt
+scratch/

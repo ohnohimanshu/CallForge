@@ -28,7 +28,7 @@ export function Shell() {
   const getPageInfo = (pathname: string) => {
     if (pathname.startsWith('/overview')) return { title: 'Fleet Overview', subtitle: 'Real-time telemetry and deployed agent operations' }
     if (pathname.startsWith('/wallboard')) return { title: 'Live Wallboard', subtitle: 'Active audio streams, sentiment radar, and call metrics' }
-    if (pathname.startsWith('/telephony')) return { title: 'Telephony Server', subtitle: 'PBX extensions, mobile softphone setup, and internal calling' }
+    if (pathname.startsWith('/telephony')) return { title: 'FreePBX Integration', subtitle: 'Method 1 Direct AudioSocket — ultra-low latency AI voice bridge' }
     if (pathname.startsWith('/campaigns')) return { title: 'Outbound Campaigns', subtitle: 'Automated dialing schedules and lead pipeline' }
     if (pathname.startsWith('/agents/new')) return { title: 'Agent Studio', subtitle: 'Configure LLM reasoning, voice models, and PBX extensions' }
     if (pathname.startsWith('/agents')) return { title: 'Voice Agents', subtitle: 'Fleet directory, dialplans, and knowledge base routing' }
@@ -286,7 +286,7 @@ export function Shell() {
             <nav className="nav">
               <NavLink to="/telephony" onClick={() => setMobileOpen(false)}>
                 <PhoneCall size={17} />
-                <span>Telephony Server</span>
+                <span>FreePBX / AudioSocket</span>
               </NavLink>
 
               <NavLink to="/agents" onClick={() => setMobileOpen(false)}>

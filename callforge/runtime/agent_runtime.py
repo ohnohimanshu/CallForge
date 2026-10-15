@@ -13,6 +13,7 @@ from typing import Optional
 from config import Settings
 from callforge.runtime.asterisk_manager import reload_asterisk
 from callforge.runtime.dialplan import write_agents_dialplan
+from callforge.runtime.freepbx_dialplan import write_freepbx_dialplan
 from callforge.runtime.voices import telephony_settings_for_port, tts_settings_for_agent
 from callforge.store.db import PlatformStore
 from callforge.store.models import AgentRecord
@@ -174,26 +175,18 @@ class AgentRuntime:
         return False
 
     def check_sip_trunk(self) -> dict:
-        """Probe Asterisk SIP connectivity and list configured endpoints."""
-        reachable = False
-        try:
-            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            s.settimeout(0.4)
-            s.connect(("127.0.0.1", 5060))
-            reachable = True
-            s.close()
-        except Exception:
-            reachable = False
-
+        """Legacy SIP probe — FreePBX Method 1 uses AudioSocket, not local SIP."""
         phone_exts = [p.extension for p in self._store.list_phones()]
         endpoints = list(dict.fromkeys(phone_exts + ["guest", "anonymous"]))
+        listening_lines = sum(1 for line in self._lines.values() if not line.serve_task.done())
         return {
-            "host": "127.0.0.1",
-            "port": 5060,
-            "protocol": "SIP / UDP",
-            "reachable": reachable,
-            "codecs": ["ulaw", "alaw", "slin16"],
+            "host": "freepbx-external",
+            "port": 0,
+            "protocol": "AudioSocket / TCP (FreePBX Method 1)",
+            "reachable": listening_lines > 0,
+            "codecs": ["slin", "slin16"],
             "configured_endpoints": endpoints,
+            "audiosocket_lines": listening_lines,
         }
 
     def get_wallboard_data(self) -> dict:
@@ -203,6 +196,7 @@ class AgentRuntime:
         max_capacity = self._settings.telephony.max_concurrent_calls
         occupancy_pct = round((total_active / max(1, max_capacity)) * 100, 1)
         sip_trunk = self.check_sip_trunk()
+        telephony_ready = any(not line.serve_task.done() for line in self._lines.values())
 
         lines = []
         for aid, line in self._lines.items():
@@ -222,11 +216,12 @@ class AgentRuntime:
 
         return {
             "system": {
-                "telephony_ready": sip_trunk["reachable"],
+                "telephony_ready": telephony_ready,
                 "runtime_ready": self.ready,
                 "total_active_calls": total_active,
                 "concurrent_capacity": max_capacity,
                 "channel_occupancy_pct": occupancy_pct,
+                "integration": "freepbx_audiosocket",
             },
             "sip_trunk": sip_trunk,
             "active_calls": live_calls,
@@ -359,9 +354,20 @@ class AgentRuntime:
 
     async def _sync_dialplan(self) -> dict:
         agents = self._store.list_deployed_agents()
+        # Primary: FreePBX Method 1 dialplan snippet for operators to paste
+        freepbx_path = Path("platform_data/freepbx/extensions_custom_callforge.conf")
+        write_freepbx_dialplan(agents, freepbx_path)
+        logger.info("Wrote FreePBX Method 1 dialplan → %s (%d agents)", freepbx_path, len(agents))
+
+        # Legacy local Asterisk dialplan (optional profile) — best-effort reload
         write_agents_dialplan(agents, self._dialplan_path)
-        logger.info("Wrote dialplan → %s (%d agents)", self._dialplan_path, len(agents))
+        logger.info("Wrote legacy Asterisk dialplan → %s (%d agents)", self._dialplan_path, len(agents))
         reload_result = await reload_asterisk()
         logger.info("Asterisk auto-reload status: %s", reload_result)
-        return reload_result
+        return {
+            "freepbx_file": str(freepbx_path),
+            "legacy_asterisk_file": str(self._dialplan_path),
+            "agents": len(agents),
+            "reload": reload_result,
+        }
 
