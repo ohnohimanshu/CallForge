@@ -303,6 +303,13 @@ class AudioSocketServer:
         stream_start_time: Optional[float] = None
         frame_index = 0
 
+        # Immediately send an initial silence frame so Asterisk's 2000ms activity timer never trips
+        try:
+            writer.write(encode_audio_frame(b"\x00" * self._settings.frame_bytes))
+            await writer.drain()
+        except Exception as exc:
+            logger.debug("Failed sending initial silence frame: %s", exc)
+
         try:
             while True:
                 chunk = await session.outbound_audio.get()

@@ -61,8 +61,8 @@ def render_agent_freepbx_context(
 [callforge-agent-{ext}]
 exten => s,1,NoOp(CallForge Method 1 AudioSocket → {name})
  same => n,Answer()
- same => n,Wait(0.2)
- same => n,Set(CALL_UUID=${{SHELL(cat /proc/sys/kernel/random/uuid 2>/dev/null || uuidgen | tr -d '\\n')}})
+ same => n,Set(CALL_UUID=${{UUID()}})
+ same => n,NoOp(CallForge Call UUID: ${{CALL_UUID}})
  same => n,Set(CF_AGENT_ID={agent_id})
  same => n,Set(CF_API={base})
  ; Register caller ID with CallForge (works across separate FreePBX host — no shared FS)
@@ -119,6 +119,15 @@ def render_freepbx_bundle(
         return header + "; (no deployed agents — deploy an agent in CallForge first)\n"
 
     body = header
+    body += "; =====================================================================\n"
+    body += "; Allow dialing AI agent extensions directly from internal phones/softphones\n"
+    body += "; =====================================================================\n"
+    body += "[from-internal-custom]\n"
+    for agent in sorted(deployed, key=lambda a: a.extension):
+        ext = agent.extension.strip()
+        body += f"exten => {ext},1,Goto(callforge-agent-{ext},s,1)\n"
+    body += "\n"
+
     for agent in sorted(deployed, key=lambda a: a.extension):
         body += render_agent_freepbx_context(agent, host=audio_host, api_base=base)
     return body

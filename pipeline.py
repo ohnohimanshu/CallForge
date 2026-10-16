@@ -822,7 +822,7 @@ class CallPipeline:
         (or 0.4s for outbound campaign calls) after connecting, proactively speak
         the greeting rather than waiting indefinitely for them to talk first.
         """
-        silence_timeout = 0.4 if self._is_campaign_call else self._persona.initial_silence_timeout_s
+        silence_timeout = 0.3 if self._is_campaign_call else min(0.4, self._persona.initial_silence_timeout_s)
         try:
             await asyncio.wait_for(
                 self._first_speech_detected.wait(), timeout=silence_timeout
